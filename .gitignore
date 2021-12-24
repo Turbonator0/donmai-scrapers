@@ -1,0 +1,7 @@
+# files
+*.tmp
+*.bak
+*.backup
+# directories
+.vscode/
+test/
