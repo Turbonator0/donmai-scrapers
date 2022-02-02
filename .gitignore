@@ -2,6 +2,8 @@
 *.tmp
 *.bak
 *.backup
+*.png
+*.jpg
 # directories
 .vscode/
 test/

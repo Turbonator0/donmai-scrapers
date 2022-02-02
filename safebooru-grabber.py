@@ -1,8 +1,17 @@
 import wget, requests, sys
 
+def showHelp():
+    print("Syntax is: python3 safebooru-grabber <tag(s)> <output folder>")
+    sys.exit()
 limit = 200
 include_tags = '%20'.join(sys.argv[1:(len(sys.argv)-1)])
 output_folder = sys.argv[len(sys.argv)-1]
+
+# This does something
+match sys.argv[1]:
+    case "-h" : showHelp()
+    case "-H" : showHelp()
+    case "help" : showHelp()
 
 url = "https://safebooru.donmai.us/posts.json?tags={}&limit={}&page={}"
 while True:
