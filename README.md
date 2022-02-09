@@ -4,7 +4,7 @@
 
 Safebooru grabber:
 ```
-python3 safebooru-grabber.py [tags] [output folder]
+python3 safebooru-grabber.py -t [tags] -o [output folder]
 ```
 Danbooru grabber:
 
