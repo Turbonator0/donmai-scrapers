@@ -40,6 +40,7 @@ include_tags = "%20".join(include_tags)
 for rating in ratings:
     try:os.mkdir("{}/{}".format(output_folder,rating))
     except FileExistsError:print("Folder {} exists".format(rating))
+    except FileNotFoundError: os.mkdir("{}".format(output_folder))
 
 while True:
     for rating in user_ratings:
