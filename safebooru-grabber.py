@@ -1,39 +1,56 @@
-import wget, requests, sys
+import argparse, wget, requests, os, sys
 
-# assumes you are not using a gold/plat account, I have not added auth keys yet
-MAXTAGS = 2
-MAXTAGS_OFFSET = MAXTAGS + 1
+
+
+parser = argparse.ArgumentParser("Scrape content from safebooru")
+
+parser.add_argument("--tags",action="store",type=str,nargs="*",help="Tags to query by, defaults to all")
+parser.add_argument("--output-folder",action="store",type=str,help="Folder to download images to")
+
+# Set if you want to see an error message before the script quits
+parser.add_argument("--show-1001-error",action="store",type=str,help="",metavar="",required=False,default=False, choices=["True","False"])
+
+
+args = parser.parse_args()
+
+include_tags = "%20".join(args.__getattribute__("tags"))
+output_folder = args.__getattribute__("output_folder")
+pages1001 = args.__getattribute__("show_1001_error")
+
+try: os.mkdir(output_folder) 
+except FileExistsError: print("Output folder exists")
+
+print(include_tags,output_folder,pages1001)
+#print(requests.get("https://safebooru.donmai.us/posts.json?page=1001").json()["message"])
+# There is no reason to set this lower
+# Since the maximum images to download is 200*1000 which is 200000 but you know
 limit = 200
-include_tags = []
-# This does something
-for args in range(len(sys.argv)):
-    current_arg = sys.argv[args]
-    if "--help" in sys.argv:
-        print("""Current options are:
-        -t\t\tfor tags
-        -o\t\tfor output folder
-        --help\t\tto display this message again""")
-        sys.exit()
-    if current_arg == "-o":
-        output_folder = sys.argv[args+1]
-    elif current_arg == "-t":
-        for i in sys.argv[args+1:args+MAXTAGS_OFFSET]:
-            # stop at delimiter which is -
-            if "-" in i:
-                break
-            else: include_tags.append(i)
-    
-include_tags = "%20".join(include_tags)
 
+# Construct url
 url = "https://safebooru.donmai.us/posts.json?tags={}&limit={}&page={}"
-while True:
-    # we can only go up to page 1000
-    for i in range(1,1001):
-        page_json = requests.get(url.format(include_tags,limit,i)).json()
-        for i in range(200):
-            try: 
-                if "file_url" in page_json[i]:
-                    wget.download(page_json[i]["file_url"],output_folder)
-            except IndexError:
-                print("Index, not found, quitting...")
-                sys.exit()
+
+
+if pages1001 == "True":
+    # Will go to page 1001
+    secret = 1002
+else: secret = 1001
+
+# Show these fields, in specified order,
+# Go check yourself all the options available
+
+print(include_tags)
+for i in range(1,secret):
+    page = requests.get(url.format(include_tags,limit,i)).json()
+    
+    # This will also terminate when previously I had to manually catch IndexErrors
+    if page == []:
+        print("Page is empty... stopping")
+        sys.exit()
+        
+    for item in page:
+        print(i)
+        # item is a dictionary
+        
+        if "file_url" in item:
+            wget.download(item["file_url"],output_folder)
+        
