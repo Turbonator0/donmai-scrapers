@@ -11,17 +11,15 @@ parser.add_argument("--output-folder",action="store",type=str,help="Folder to do
 parser.add_argument("--show-1001-error",action="store",type=str,help="",metavar="",required=False,default=False, choices=["True","False"])
 
 
-args = parser.parse_args()
+args = parser.parse_args().__dict__
 
-include_tags = "%20".join(args.__getattribute__("tags"))
-output_folder = args.__getattribute__("output_folder")
-pages1001 = args.__getattribute__("show_1001_error")
+include_tags = "%20".join(args["tags"])
+output_folder = args["output_folder"]
+pages1001 = args["show_1001_error"]
 
 try: os.mkdir(output_folder) 
 except FileExistsError: print("Output folder exists")
 
-print(include_tags,output_folder,pages1001)
-#print(requests.get("https://safebooru.donmai.us/posts.json?page=1001").json()["message"])
 # There is no reason to set this lower than 200
 # Since the maximum images to download is 200*1000 which is 200000 but you know
 limit = 200
