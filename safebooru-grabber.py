@@ -22,11 +22,11 @@ except FileExistsError: print("Output folder exists")
 
 print(include_tags,output_folder,pages1001)
 #print(requests.get("https://safebooru.donmai.us/posts.json?page=1001").json()["message"])
-# There is no reason to set this lower
+# There is no reason to set this lower than 200
 # Since the maximum images to download is 200*1000 which is 200000 but you know
 limit = 200
 
-# Construct url
+# "Construct" url
 url = "https://safebooru.donmai.us/posts.json?tags={}&limit={}&page={}"
 
 
@@ -34,9 +34,6 @@ if pages1001 == "True":
     # Will go to page 1001
     secret = 1002
 else: secret = 1001
-
-# Show these fields, in specified order,
-# Go check yourself all the options available
 
 print(include_tags)
 for i in range(1,secret):
@@ -46,11 +43,11 @@ for i in range(1,secret):
     if page == []:
         print("Page is empty... stopping")
         sys.exit()
-        
+    if i == 1001:
+        error = requests.get("https://safebooru.donmai.us/posts.json?page={}".format(i)).json()
+        print("\nSuccess : {}\n{}".format(error["success"],error["message"]))
+        sys.exit()
     for item in page:
-        print(i)
-        # item is a dictionary
-        
         if "file_url" in item:
             wget.download(item["file_url"],output_folder)
         
