@@ -4,10 +4,10 @@ import argparse, wget, requests, os, sys
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--tags",action="store",type=str,nargs="*",help="Tags to query by, defaults to all")
 parser.add_argument("--output-folder",action="store",type=str,help="Folder to download images to")
 
 # Set if you want to see an error message before the script quits (not actually implemented)
+parser.add_argument("--tags",action="store",type=str,nargs="*",help="Tags to query by, defaults to all",required=False, default="")
 parser.add_argument("--show-1001-error",action="store",type=str,help="",metavar="",required=False,default=False, choices=["True","False"])
 
 
