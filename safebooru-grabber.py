@@ -2,7 +2,7 @@ import argparse, wget, requests, os, sys
 
 
 
-parser = argparse.ArgumentParser("Scrape content from safebooru")
+parser = argparse.ArgumentParser()
 
 parser.add_argument("--tags",action="store",type=str,nargs="*",help="Tags to query by, defaults to all")
 parser.add_argument("--output-folder",action="store",type=str,help="Folder to download images to")
