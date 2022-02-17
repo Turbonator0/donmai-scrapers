@@ -12,5 +12,5 @@ Not going to style this
 Danbooru grabber:
 
 ```
-python3 danbooru_grabber.py -t [tags] -o [output folder] -r [e,q,s]
+python3 danbooru_grabber.py --tags [tags] --output-folder FOLDER --ratings [e,q,s]
 ```
