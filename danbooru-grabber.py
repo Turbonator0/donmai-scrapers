@@ -1,4 +1,4 @@
-import argparse, wget, requests, os, sys
+import argparse, wget, requests, os, sys, re, urllib
 
 # boilerplate
 parser = argparse.ArgumentParser()
@@ -17,16 +17,8 @@ include_tags = "%20".join(args["tags"])
 output_folder = args["output_folder"]
 search_ratings = args["ratings"]
 
-
+url = "https://danbooru.donmai.us/posts.json?tags={}%20rating:{}&limit={}&page={}"
 limit = 200
-
-def downloadImages(page: str, out: str, rating: str):
-    if page == []:
-            print("Page is empty... stopping")
-            sys.exit()
-
-    if "file_url" in post.keys():
-        wget.download(post["file_url"],f"{output_folder}/{rating}")
 
 # create parent directory
 try:os.mkdir(output_folder)
@@ -37,8 +29,22 @@ for rating in search_ratings:
     try:os.mkdir(f"{output_folder}/{rating}")
     except FileExistsError: print(f"Folder: {output_folder}/{rating} exists")
 
-for rating in search_ratings:
-    for page_n in range(1,1001):
-        page = requests.get(url.format(include_tags,rating,limit,page_n)).json()
 
-        downloadImages(page, output_folder, rating)
+# By rating
+for rating in search_ratings:
+    # By page
+    for page_n in range(1,1001):
+        # By entry of page
+
+        page = requests.get(url.format(include_tags,rating,limit,page_n)).json()
+        if page == []:
+            break # break for loop
+        for item in page:
+            
+            if "file_url" in item:
+
+                file_location = output_folder+"/"+rating
+                try: wget.download(item["file_url"],file_location)
+
+                # This gets raised for some reason, I do not know why
+                except urllib.error.URLError: break
